@@ -1,7 +1,6 @@
 import cv2 as cv
 import serial.tools.list_ports
 from time import sleep 
-import math 
 
 RED = (0, 0, 255)
 GREEN = (0, 255, 0)

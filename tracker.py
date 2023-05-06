@@ -2,6 +2,7 @@ import cv2 as cv
 import numpy as np
 import math
 import utils 
+from time import sleep
 
 class Tracker:
 
@@ -34,7 +35,8 @@ class Tracker:
 
     def sendSerialData(self, packet):
         print(packet)
-        #self.serialPort.write(packet.encode("utf-8"))
+        self.serialPort.write(packet.encode("utf-8"))
+        sleep(0.015)
 
     def scaleAndSend(self, x, y, factor=1, printMode=False):
         sx = int((self.arduinoWidth * x) // self.vidWidth) * factor
@@ -96,7 +98,7 @@ class MouseTracker(Tracker):
         blackScreen = np.zeros((600,600,3), np.uint8)
         self.setVidDim(None, defaults=True)
         cv.imshow(self.winName, blackScreen)
-        cv.setMouseCallback(self.winName, self.trackMouse, (1, True))
+        cv.setMouseCallback(self.winName, self.trackMouse, (1, False))
         if self.quit(0) is True:
             return
 
@@ -138,12 +140,12 @@ class FaceTracker(Tracker):
         cv.destroyAllWindows()
 
 if __name__ == "__main__":
-    #ports = utils.serial.tools.list_ports.comports()
-    #templateSerialPort = utils.serial.Serial()
-    #serialPort = utils.initSerialPorts(ports, templateSerialPort)
-    #serialPort.open()
-    tracker = FaceTracker(1)
+    ports = utils.serial.tools.list_ports.comports()
+    templateSerialPort = utils.serial.Serial()
+    serialPort = utils.initSerialPorts(ports, templateSerialPort)
+    serialPort.open()
+    tracker = FaceTracker(serialPort)
     tracker.track()
-    #serialPort.close()
+    serialPort.close()
 
     
